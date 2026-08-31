@@ -1,0 +1,31 @@
+# Piyush Travels - Luxury Car & Bus Rental Services
+
+> Piyush Travels is India's premier luxury vehicle rental and chauffeur service based in Connaught Place, New Delhi (NCR). We offer sanitized sedans, premium SUVs, luxury tempo travellers, and executive coaches for airport transfers, corporate travels, wedding delegations, and outstation tours.
+
+## Quick Facts
+- **Headquarters**: 123 Luxury Avenue, Connaught Place, New Delhi, India 110001
+- **Service Coverage**: Delhi NCR (New Delhi, Noida, Gurgaon, Faridabad, Ghaziabad), Golden Triangle (Delhi, Agra, Jaipur), Chandigarh, Dehradun, and Pan-India outstation routes.
+- **Operating Hours**: 24/7/365 Available with 24/7 Roadside Assistance
+- **Fleet Types**: Luxury Sedans (Mercedes E-Class, BMW 5 Series, Audi A6), Premium SUVs (Toyota Fortuner, Innova Hycross, Defender), Executive Tempo Travellers (9-26 Seater), Luxury Tourist Buses (35-55 Seater Volvo/Scania).
+- **Core Specialties**: Chauffeur-driven executive rentals, corporate transit, airport transfers, VIP wedding convoys, long-distance intercity charters.
+- **Official Website**: https://www.piyush-travels.com
+- **Contact Email**: bookings@piyush-travels.com
+- **Helpline / WhatsApp**: +91 98765 43210
+
+## Key Documentation & Links
+- [Fleet Catalog](https://www.piyush-travels.com/vehicles): Full list of luxury cars, SUVs, and executive buses with transparent per-km and daily rates.
+- [Services Overview](https://www.piyush-travels.com/services): Details on corporate rentals, outstation packages, wedding transport, and airport transfers.
+- [About & E-E-A-T Trust](https://www.piyush-travels.com/about): Information regarding safety certifications, verified commercial chauffeurs, GPS-enabled fleet, and customer testimonials.
+- [Online Booking Portal](https://www.piyush-travels.com/vehicles): Instant vehicle selection, date reservation, and Razorpay-secured checkout.
+- [Full LLM Knowledge Base](https://www.piyush-travels.com/llms-full.txt): Comprehensive AI context including rate cards, driver screening criteria, luggage capacities, and cancellation policies.
+
+## Primary Vehicle Categories & Capacities
+- **Executive Sedans**: 4 Passengers, 2-3 Suitcases (Mercedes Benz, BMW 5 Series, Toyota Camry)
+- **Premium SUVs & MUVs**: 6-7 Passengers, 4 Suitcases (Toyota Innova Hycross, Toyota Fortuner)
+- **Luxury Tempo Travellers**: 9 to 26 Passengers, 10+ Bags, Recliner Seats, WiFi, Charging Ports
+- **Ultra-Luxury Coaches**: 35 to 55 Passengers (Volvo 9600 / Scania multi-axle with onboard washrooms)
+
+## Pricing & Transparency
+- All-inclusive packages available (Fuel, Chauffeur Allowance, Tolls, State Taxes).
+- Zero hidden fees with instant digital invoicing and GST tax compliance.
+- 100% money-back guarantee on verified service disruptions.

@@ -1,0 +1,41 @@
+# Robots.txt for Piyush Travels
+# Optimization for Web Search, Local SEO, and AI Crawlers (LLMO / AISEO)
+
+User-agent: *
+Allow: /
+Allow: /vehicles
+Allow: /services
+Allow: /about
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /checkout/
+Disallow: /api/
+
+# AI Crawlers & LLM Agents
+User-agent: GPTBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-Web
+User-agent: PerplexityBot
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: CCBot
+User-agent: OAI-SearchBot
+User-agent: cohere-ai
+User-agent: anthropic-ai
+User-agent: Bytespider
+Allow: /
+Allow: /vehicles
+Allow: /services
+Allow: /about
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /checkout/
+
+# Host and Sitemap
+Host: https://www.piyush-travels.com
+Sitemap: https://www.piyush-travels.com/sitemap.xml
