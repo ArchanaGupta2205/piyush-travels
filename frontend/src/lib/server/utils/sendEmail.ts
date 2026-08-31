@@ -10,7 +10,10 @@ interface EmailOptions {
 }
 
 const sendEmail = async (options: EmailOptions) => {
-  if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
+  const smtpUser = process.env.SMTP_USER || process.env.SMTP_EMAIL;
+  const smtpPass = process.env.SMTP_PASS || process.env.SMTP_PASSWORD;
+
+  if (!process.env.SMTP_HOST || !smtpUser || !smtpPass) {
     console.log(`[Email Mock] To: ${options.email}, Subject: ${options.subject}`);
     return;
   }
@@ -20,8 +23,8 @@ const sendEmail = async (options: EmailOptions) => {
     port: Number(process.env.SMTP_PORT) || 587,
     secure: Number(process.env.SMTP_PORT) === 465,
     auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
+      user: smtpUser,
+      pass: smtpPass,
     },
   });
 
