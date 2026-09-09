@@ -1,10 +1,12 @@
 import { MetadataRoute } from "next";
+import { connectDB } from "@/lib/server/db";
+import { Vehicle } from "@/lib/server/models/Vehicle";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.piyush-travels.com";
   const lastModified = new Date();
 
-  return [
+  const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}`,
       lastModified,
@@ -42,4 +44,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
   ];
+
+  try {
+    await connectDB();
+    const vehicles = await Vehicle.find({}, "_id updatedAt").lean();
+    const vehicleRoutes: MetadataRoute.Sitemap = vehicles.map((v: any) => ({
+      url: `${baseUrl}/vehicles/${v._id}`,
+      lastModified: v.updatedAt || lastModified,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    }));
+    return [...staticRoutes, ...vehicleRoutes];
+  } catch {
+    return staticRoutes;
+  }
 }
