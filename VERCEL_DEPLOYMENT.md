@@ -19,8 +19,8 @@ In your **Vercel Dashboard** ➡️ Go to **Project** ➡️ **Settings** ➡️
 | `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | `xxxx.apps.googleusercontent.com` | Google OAuth Client ID for 1-click Google Sign-In |
 | `SMTP_HOST` *(Optional)* | `smtp.gmail.com` | Email SMTP host for invoice & booking alerts |
 | `SMTP_PORT` *(Optional)* | `587` | Email SMTP port |
-| `SMTP_USER` *(Optional)* | `bookings@piyush-travels.com` | SMTP email address |
-| `SMTP_PASS` *(Optional)* | `your_gmail_app_password` | SMTP App password |
+| `SMTP_USER` *(Optional)* | `piyushtravels79@gmail.com` | SMTP email address (Gmail) |
+| `SMTP_PASS` *(Optional)* | `your_gmail_app_password` | Gmail 16-character App password |
 
 ---
 
@@ -56,6 +56,6 @@ NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_google_oauth_client_id.apps.googleusercontent.
 ## 🛠️ Vercel Project Build Settings
 
 - **Framework Preset**: `Next.js`
-- **Root Directory**: `frontend`
+- **Root Directory**: `.` *(Leave blank / default repository root)*
 - **Build Command**: `npm run build`
 - **Output Directory**: `.next`

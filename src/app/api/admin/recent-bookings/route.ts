@@ -16,11 +16,13 @@ export async function GET() {
       .populate("vehicle", "name brand");
 
     const formattedBookings = recentBookings.map((b: any) => ({
-      id: b.bookingId,
-      customer: `${b.passengerDetails.firstName} ${b.passengerDetails.lastName}`,
-      vehicle: b.vehicle ? `${b.vehicle.brand} ${b.vehicle.name}` : "Unknown Vehicle",
-      status: b.bookingStatus,
-      date: new Date(b.createdAt).toISOString().split("T")[0],
+      id: b.bookingId || b._id?.toString(),
+      customer: b.passengerDetails
+        ? `${b.passengerDetails.firstName || ""} ${b.passengerDetails.lastName || ""}`.trim() || "Guest"
+        : "Guest",
+      vehicle: b.vehicle ? `${b.vehicle.brand || ""} ${b.vehicle.name || ""}`.trim() : "Unknown Vehicle",
+      status: b.bookingStatus || "Requested",
+      date: b.createdAt ? new Date(b.createdAt).toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
     }));
 
     return NextResponse.json({

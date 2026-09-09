@@ -1,4 +1,15 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "/api";
+const getBaseUrl = () => {
+  if (typeof window !== "undefined") {
+    return process.env.NEXT_PUBLIC_API_URL || "/api";
+  }
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    return `${process.env.NEXT_PUBLIC_SITE_URL}/api`;
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}/api`;
+  }
+  return `http://127.0.0.1:${process.env.PORT || 3000}/api`;
+};
 
 export const fetchAPI = async (endpoint: string, options: RequestInit = {}) => {
   const defaultHeaders: Record<string, string> = {
@@ -21,7 +32,9 @@ export const fetchAPI = async (endpoint: string, options: RequestInit = {}) => {
     },
   };
 
-  const response = await fetch(`${API_URL}${endpoint}`, config);
+  const baseUrl = getBaseUrl();
+  const formattedEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+  const response = await fetch(`${baseUrl}${formattedEndpoint}`, config);
 
   const data = await response.json();
 

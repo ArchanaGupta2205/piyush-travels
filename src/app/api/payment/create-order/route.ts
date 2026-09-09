@@ -31,6 +31,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       order,
+      order_id: order.id,
+      amount: order.amount,
+      currency: order.currency,
     });
   } catch (error) {
     return NextResponse.json(

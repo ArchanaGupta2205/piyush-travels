@@ -5,6 +5,8 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { CheckCircle2, Download, ArrowLeft, Printer, Car } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+import { fetchAPI } from "@/lib/api";
+
 export default function InvoicePage() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -15,9 +17,26 @@ export default function InvoicePage() {
     setIsClient(true);
     const bookingId = searchParams.get("bookingId");
     if (bookingId) {
-      const stored = JSON.parse(localStorage.getItem("piyush_bookings") || "[]");
-      const found = stored.find((b: any) => b.bookingId === bookingId);
-      if (found) setBooking(found);
+      try {
+        const stored = JSON.parse(localStorage.getItem("piyush_bookings") || "[]");
+        const found = stored.find((b: any) => b.bookingId === bookingId || b._id === bookingId);
+        if (found) {
+          setBooking(found);
+          return;
+        }
+      } catch {
+        // Continue to fetch from API
+      }
+
+      fetchAPI(`/bookings/${bookingId}`)
+        .then((res) => {
+          if (res.success && res.data) {
+            setBooking(res.data);
+          }
+        })
+        .catch((err) => {
+          console.error("Failed to load invoice from API:", err);
+        });
     }
   }, [searchParams]);
 

@@ -34,8 +34,11 @@ export default function RazorpayCheckout({ amount }: RazorpayCheckoutProps) {
       }
 
       const data = await res.json();
+      const orderId = data.order?.id || data.order_id;
+      const orderAmount = data.order?.amount || data.amount || Math.round(amount * 100);
+      const orderCurrency = data.order?.currency || data.currency || "INR";
 
-      if (!data.success || !data.order_id) {
+      if (!data.success || !orderId) {
         throw new Error(data.message || "Failed to generate order ID");
       }
 
@@ -47,15 +50,15 @@ export default function RazorpayCheckout({ amount }: RazorpayCheckoutProps) {
       // 2. Initialize Razorpay Checkout
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        amount: data.amount,
-        currency: data.currency,
+        amount: orderAmount,
+        currency: orderCurrency,
         name: "Piyush Travels",
         description: "Payment for Booking",
-        order_id: data.order_id,
+        order_id: orderId,
         handler: async function (response: any) {
           // 3. Verify Signature on backend
           try {
-            const verifyRes = await fetch(`${API_BASE}/payment/verify-payment`, {
+            const verifyRes = await fetch(`${API_BASE}/payments/verify`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
@@ -106,7 +109,7 @@ export default function RazorpayCheckout({ amount }: RazorpayCheckoutProps) {
       setMessage({
         text:
           error.name === "TypeError" && error.message.includes("Failed to fetch")
-            ? "Could not connect to backend server at " + API_BASE + ". Please ensure your backend server is running on port 5000."
+            ? "Could not connect to server at " + API_BASE + ". Please ensure your server is running."
             : error.message || "An unexpected error occurred",
         type: "error",
       });

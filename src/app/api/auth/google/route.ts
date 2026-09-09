@@ -3,14 +3,21 @@ import { connectDB } from "@/lib/server/db";
 import { User } from "@/lib/server/models/User";
 import { generateToken } from "@/lib/server/utils/auth";
 import { OAuth2Client } from "google-auth-library";
+import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
-const googleClient = new OAuth2Client(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
+const googleClientId =
+  process.env.GOOGLE_CLIENT_ID ||
+  process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||
+  "380334686239-a98nfgmlqjct2g947hqvutk31jb3ln8o.apps.googleusercontent.com";
+
+const googleClient = new OAuth2Client(googleClientId);
 
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
-    const { token: credential } = await req.json();
+    const body = await req.json();
+    const credential = body.credential || body.token;
 
     if (!credential) {
       return NextResponse.json(
@@ -19,18 +26,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    let payload;
+    let payload: any;
     try {
       const ticket = await googleClient.verifyIdToken({
         idToken: credential,
-        audience: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+        audience: [googleClientId, process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""].filter(Boolean),
       });
       payload = ticket.getPayload();
     } catch {
       // Fallback decoding if verifyIdToken audience fails in development
-      const base64Url = credential.split(".")[1];
-      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      payload = JSON.parse(Buffer.from(base64, "base64").toString());
+      const parts = credential.split(".");
+      if (parts.length >= 2) {
+        const base64Url = parts[1];
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        payload = JSON.parse(Buffer.from(base64, "base64").toString());
+      }
     }
 
     if (!payload || !payload.email) {
@@ -43,20 +53,27 @@ export async function POST(req: NextRequest) {
     const { email, name, picture } = payload;
     let user = await User.findOne({ email });
 
-    const userRole =
-      email === "piyushtravels79@gmail.com" || email === "admin@piyush-travels.com"
-        ? "admin"
-        : "customer";
+    const adminEmail = process.env.ADMIN_EMAIL || "piyushtravels79@gmail.com";
+    const isAdmin =
+      email.toLowerCase() === adminEmail.toLowerCase() ||
+      email.toLowerCase() === "admin@piyush-travels.com";
 
     if (!user) {
-      const randomPassword = crypto.randomBytes(16).toString("hex");
+      // Securely hash random password for Google-authenticated users (matches previous backend)
+      const randomPassword = crypto.randomBytes(20).toString("hex");
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(randomPassword, salt);
+
       user = await User.create({
         name: name || email.split("@")[0],
         email,
-        password: randomPassword,
-        avatar: picture,
-        role: userRole,
+        password: hashedPassword,
+        avatar: picture || "default-avatar-url.jpg",
+        role: isAdmin ? "admin" : "customer",
       });
+    } else if (isAdmin && user.role !== "admin") {
+      user.role = "admin";
+      await user.save();
     }
 
     const authToken = generateToken(user._id.toString(), user.role);

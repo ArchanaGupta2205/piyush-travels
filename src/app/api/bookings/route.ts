@@ -41,9 +41,11 @@ export async function POST(req: NextRequest) {
       paymentStatus: "Pending",
     });
 
+    const adminEmail = process.env.ADMIN_EMAIL || "piyushtravels79@gmail.com";
+
     // Notify Admin via Notification
     await Notification.create({
-      userEmail: "admin@piyush-travels.com",
+      userEmail: adminEmail,
       title: "New Booking Request",
       message: `A new booking request (${bookingId}) has been received for ${vehicle.name}. Please review and provide a quote.`,
       type: "info",
@@ -53,7 +55,7 @@ export async function POST(req: NextRequest) {
     // Send email notification to Admin & Passenger
     try {
       await sendEmail({
-        email: process.env.SMTP_EMAIL || "admin@piyush-travels.com",
+        email: process.env.SMTP_EMAIL || adminEmail,
         subject: `New Booking Request - ${bookingId}`,
         message: `You have received a new booking request for ${vehicle.name}. Passenger: ${passengerDetails.firstName} ${passengerDetails.lastName}.`,
       });

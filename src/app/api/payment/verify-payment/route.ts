@@ -34,8 +34,9 @@ export async function POST(req: NextRequest) {
       const sendEmail = (await import("@/lib/server/utils/sendEmail")).default;
 
       await connectDB();
-      const query = (await req.clone().json()).bookingId
-        ? { bookingId: (await req.clone().json()).bookingId }
+      const body = await req.clone().json();
+      const query = body.bookingId
+        ? { bookingId: body.bookingId }
         : { razorpayOrderId: razorpay_order_id };
 
       const booking = await Booking.findOne(query);
@@ -58,7 +59,7 @@ export async function POST(req: NextRequest) {
         }
       }
     } catch {
-      // Continue if db update is optional for standalone checkout
+      // Continue if db update is optional
     }
 
     return NextResponse.json({

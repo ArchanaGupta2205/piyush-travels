@@ -1,10 +1,18 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/server/db";
 import { Booking } from "@/lib/server/models/Booking";
 import { Vehicle } from "@/lib/server/models/Vehicle";
+import { getAuthUser } from "@/lib/server/utils/auth";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const authUser = getAuthUser(req);
+    if (!authUser || authUser.role !== "admin") {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized. Admin access required." },
+        { status: 401 }
+      );
+    }
     await connectDB();
     const totalVehicles = await Vehicle.countDocuments();
     const activeBookings = await Booking.countDocuments({ bookingStatus: "Confirmed" });

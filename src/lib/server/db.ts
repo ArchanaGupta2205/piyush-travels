@@ -1,6 +1,14 @@
 import mongoose from "mongoose";
+import dns from "node:dns";
 
-const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGO_URI || "";
+// Fix for Windows / ISP DNS resolvers failing on MongoDB Atlas SRV records
+try {
+  dns.setServers(["8.8.8.8", "1.1.1.1"]);
+} catch {
+  // Ignore in environments where setting DNS servers is restricted
+}
+
+const MONGODB_URI = (process.env.MONGODB_URI || process.env.MONGO_URI || "").trim();
 
 if (!MONGODB_URI) {
   // In development/build if not set, warn but don't crash static build
@@ -31,6 +39,12 @@ export async function connectDB() {
   if (!cached.promise) {
     if (!MONGODB_URI) {
       throw new Error("MONGODB_URI environment variable is not defined");
+    }
+
+    try {
+      dns.setServers(["8.8.8.8", "1.1.1.1"]);
+    } catch {
+      // ignore
     }
 
     const opts = {

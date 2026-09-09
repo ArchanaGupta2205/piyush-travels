@@ -9,15 +9,20 @@ export interface DecodedToken {
 }
 
 export const generateToken = (id: string, role: string) => {
-  const secret = process.env.JWT_SECRET || "default_jwt_secret_piyush_travels_production";
-  return jwt.sign({ id, role }, secret, {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("JWT_SECRET environment variable is missing in production!");
+    }
+  }
+  return jwt.sign({ id, role }, secret || "dev_secret_piyush_travels_fallback_key", {
     expiresIn: "30d",
   });
 };
 
 export const verifyToken = (token: string): DecodedToken | null => {
   try {
-    const secret = process.env.JWT_SECRET || "default_jwt_secret_piyush_travels_production";
+    const secret = process.env.JWT_SECRET || "dev_secret_piyush_travels_fallback_key";
     return jwt.verify(token, secret) as DecodedToken;
   } catch {
     return null;

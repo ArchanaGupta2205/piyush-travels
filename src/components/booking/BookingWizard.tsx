@@ -117,6 +117,16 @@ export default function BookingWizard({ vehicle }: BookingWizardProps) {
 
       const { data: booking } = res;
 
+      if (typeof window !== "undefined" && booking) {
+        try {
+          const current = JSON.parse(localStorage.getItem("piyush_bookings") || "[]");
+          current.unshift(booking);
+          localStorage.setItem("piyush_bookings", JSON.stringify(current));
+        } catch {
+          // ignore local storage errors
+        }
+      }
+
       setCompletedBooking(booking);
       setCurrentStep((p) => Math.min(steps.length - 1, p + 1));
     } catch (error: any) {

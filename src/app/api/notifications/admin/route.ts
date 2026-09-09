@@ -5,8 +5,17 @@ import { Notification } from "@/lib/server/models/Notification";
 export async function GET() {
   try {
     await connectDB();
+    const adminEmail = process.env.ADMIN_EMAIL || "piyushtravels79@gmail.com";
     const notifications = await Notification.find({
-      userEmail: { $in: ["admin@piyushtravels.com", "admin@piyush-travels.com", "admin"] },
+      userEmail: {
+        $in: [
+          adminEmail.toLowerCase(),
+          "piyushtravels79@gmail.com",
+          "admin@piyushtravels.com",
+          "admin@piyush-travels.com",
+          "admin",
+        ],
+      },
     })
       .sort({ createdAt: -1 })
       .limit(50);

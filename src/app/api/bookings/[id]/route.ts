@@ -14,7 +14,10 @@ export async function GET(
       console.log("Vehicle init");
     }
 
-    const booking = await Booking.findById(params.id).populate("vehicle");
+    const isObjectId = /^[0-9a-fA-F]{24}$/.test(params.id);
+    const booking = isObjectId
+      ? await Booking.findById(params.id).populate("vehicle")
+      : await Booking.findOne({ bookingId: params.id }).populate("vehicle");
     if (!booking) {
       return NextResponse.json(
         { success: false, message: "Booking not found" },

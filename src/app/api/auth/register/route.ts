@@ -27,10 +27,9 @@ export async function POST(req: NextRequest) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const userRole =
-      email === "piyushtravels79@gmail.com" || email === "admin@piyush-travels.com"
-        ? "admin"
-        : role || "customer";
+    // Only assign admin role to official owner email, otherwise force customer
+    const adminEmail = process.env.ADMIN_EMAIL || "piyushtravels79@gmail.com";
+    const userRole = (email.toLowerCase() === adminEmail.toLowerCase()) ? "admin" : "customer";
 
     const user = await User.create({
       name,

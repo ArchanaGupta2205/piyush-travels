@@ -98,7 +98,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "dummy-client-id"}>
+    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "380334686239-a98nfgmlqjct2g947hqvutk31jb3ln8o.apps.googleusercontent.com"}>
       <AuthContext.Provider value={{ user, loading, login, register, googleLogin, logout }}>
         {children}
       </AuthContext.Provider>

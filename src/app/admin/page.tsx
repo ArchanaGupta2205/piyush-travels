@@ -4,9 +4,8 @@ import { useEffect, useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { DollarSign, Car, CalendarClock, Activity } from 'lucide-react';
 import StatCard from './_components/StatCard';
+import { fetchAPI } from '@/lib/api';
 import './Dashboard.css';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 export default function Dashboard() {
   const [stats, setStats] = useState({
@@ -22,19 +21,21 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [statsRes, bookingsRes, chartRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/admin/dashboard-stats`).catch(() => null),
-          fetch(`${API_BASE_URL}/admin/recent-bookings`).catch(() => null),
-          fetch(`${API_BASE_URL}/admin/revenue-chart`).catch(() => null)
+        const [statsRes, bookingsRes, chartRes] = await Promise.allSettled([
+          fetchAPI('/admin/dashboard-stats'),
+          fetchAPI('/admin/recent-bookings'),
+          fetchAPI('/admin/revenue-chart')
         ]);
 
-        const statsData = statsRes ? await statsRes.json().catch(() => ({})) : {};
-        const bookingsData = bookingsRes ? await bookingsRes.json().catch(() => ({})) : {};
-        const chartData = chartRes ? await chartRes.json().catch(() => ({})) : {};
-
-        if (statsData.success) setStats(statsData.data);
-        if (bookingsData.success) setRecentBookings(bookingsData.data);
-        if (chartData.success) setData(chartData.data);
+        if (statsRes.status === 'fulfilled' && statsRes.value?.success) {
+          setStats(statsRes.value.data);
+        }
+        if (bookingsRes.status === 'fulfilled' && bookingsRes.value?.success) {
+          setRecentBookings(bookingsRes.value.data);
+        }
+        if (chartRes.status === 'fulfilled' && chartRes.value?.success) {
+          setData(chartRes.value.data);
+        }
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
       } finally {

@@ -10,26 +10,37 @@ interface EmailOptions {
 }
 
 const sendEmail = async (options: EmailOptions) => {
-  const smtpUser = process.env.SMTP_USER || process.env.SMTP_EMAIL;
-  const smtpPass = process.env.SMTP_PASS || process.env.SMTP_PASSWORD;
+  const smtpUser = process.env.SMTP_USER || process.env.SMTP_EMAIL || "piyushtravels79@gmail.com";
+  const rawPass = process.env.SMTP_PASS || process.env.SMTP_PASSWORD || "";
+  const smtpPass = rawPass.trim();
+  const fromEmail = process.env.FROM_EMAIL || smtpUser;
+  const fromName = process.env.FROM_NAME || "Piyush Travels";
 
-  if (!process.env.SMTP_HOST || !smtpUser || !smtpPass) {
-    console.log(`[Email Mock] To: ${options.email}, Subject: ${options.subject}`);
+  if (!smtpPass) {
+    console.log(`[Email Mock - Set SMTP_PASS in .env.local to send live emails] To: ${options.email}, Subject: ${options.subject}`);
     return;
   }
 
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT) || 587,
-    secure: Number(process.env.SMTP_PORT) === 465,
-    auth: {
-      user: smtpUser,
-      pass: smtpPass,
-    },
-  });
+  const transporter = process.env.SMTP_HOST && process.env.SMTP_HOST !== "smtp.gmail.com"
+    ? nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT) || 587,
+        secure: Number(process.env.SMTP_PORT) === 465,
+        auth: {
+          user: smtpUser,
+          pass: smtpPass,
+        },
+      })
+    : nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: smtpUser,
+          pass: smtpPass,
+        },
+      });
 
   const mailOptions: Record<string, unknown> = {
-    from: `${process.env.FROM_NAME || "Piyush Travels"} <${process.env.FROM_EMAIL || "bookings@piyush-travels.com"}>`,
+    from: `"${fromName}" <${fromEmail}>`,
     to: options.email,
     subject: options.subject,
     text: options.message,
