@@ -3,13 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchAPI } from "@/lib/api";
-import { Car, ArrowLeft, Save } from "lucide-react";
+import { Car, ArrowLeft, Save, Upload, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export default function AddVehiclePage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
@@ -36,6 +37,49 @@ export default function AddVehiclePage() {
       setFormData({ ...formData, [name]: (e.target as HTMLInputElement).checked });
     } else {
       setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setIsUploading(true);
+    setError("");
+
+    try {
+      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      const uploadedUrls: string[] = [];
+
+      for (let i = 0; i < files.length; i++) {
+        const fileData = new FormData();
+        fileData.append("file", files[i]);
+        fileData.append("folder", "piyush-travels/vehicles");
+
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          body: fileData,
+        });
+
+        const data = await res.json();
+        if (data.success && data.url) {
+          uploadedUrls.push(data.url);
+        } else {
+          throw new Error(data.message || "Failed to upload image");
+        }
+      }
+
+      const existingImages = formData.images
+        ? formData.images.split(",").map((s) => s.trim()).filter(Boolean)
+        : [];
+      const combined = [...existingImages, ...uploadedUrls].join(", ");
+      setFormData((prev) => ({ ...prev, images: combined }));
+    } catch (err: any) {
+      setError(err.message || "Image upload failed");
+    } finally {
+      setIsUploading(false);
+      if (e.target) e.target.value = "";
     }
   };
 
@@ -192,10 +236,34 @@ export default function AddVehiclePage() {
 
         {/* Media */}
         <div>
-          <h2 className="text-xl font-bold text-white mb-4 border-b border-zinc-800 pb-2">Media</h2>
+          <div className="flex justify-between items-center mb-4 border-b border-zinc-800 pb-2">
+            <h2 className="text-xl font-bold text-white">Media & Photos</h2>
+            <label className="flex items-center gap-2 px-4 py-2 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-400 border border-indigo-500/30 rounded-xl cursor-pointer text-sm font-medium transition-colors">
+              {isUploading ? <Loader2 size={16} className="animate-spin" /> : <Upload size={16} />}
+              <span>{isUploading ? "Uploading to Cloudinary..." : "Upload Photo"}</span>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                disabled={isUploading}
+                onChange={handleFileUpload}
+                className="hidden"
+              />
+            </label>
+          </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-zinc-400">Image URLs (comma separated)</label>
-            <input type="text" name="images" value={formData.images} onChange={handleChange} required className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-white outline-none focus:border-indigo-500" placeholder="https://example.com/img1.jpg, https://example.com/img2.jpg" />
+            <label className="text-sm font-medium text-zinc-400">
+              Image URLs (comma separated or upload via Cloudinary button above)
+            </label>
+            <input
+              type="text"
+              name="images"
+              value={formData.images}
+              onChange={handleChange}
+              required
+              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-white outline-none focus:border-indigo-500"
+              placeholder="https://res.cloudinary.com/..., https://..."
+            />
           </div>
         </div>
 
