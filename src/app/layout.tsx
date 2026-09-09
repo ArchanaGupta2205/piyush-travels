@@ -101,6 +101,9 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  verification: {
+    google: "laGSqizRoBJUAXl7Ri4ADRwvnSum7hEnq5YAy2GPOXY",
+  },
   other: {
     "geo.region": "IN-DL",
     "geo.placename": "New Delhi, Connaught Place",
@@ -122,6 +125,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
+        <meta name="google-site-verification" content="laGSqizRoBJUAXl7Ri4ADRwvnSum7hEnq5YAy2GPOXY" />
         {/* Google tag (gtag.js) */}
         <Script
           strategy="afterInteractive"
