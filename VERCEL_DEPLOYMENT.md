@@ -21,6 +21,9 @@ In your **Vercel Dashboard** ➡️ Go to **Project** ➡️ **Settings** ➡️
 | `SMTP_PORT` *(Optional)* | `587` | Email SMTP port |
 | `SMTP_USER` *(Optional)* | `piyushtravels79@gmail.com` | SMTP email address (Gmail) |
 | `SMTP_PASS` *(Optional)* | `your_gmail_app_password` | Gmail 16-character App password |
+| `CLOUDINARY_CLOUD_NAME` *(Optional)* | `your_cloud_name` | Cloudinary account cloud name |
+| `CLOUDINARY_API_KEY` *(Optional)* | `your_api_key` | Cloudinary API Key |
+| `CLOUDINARY_API_SECRET` *(Optional)* | `your_api_secret` | Cloudinary API Secret |
 
 ---
 
