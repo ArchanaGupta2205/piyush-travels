@@ -9,7 +9,7 @@ import crypto from "crypto";
 const googleClientId =
   process.env.GOOGLE_CLIENT_ID ||
   process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||
-  "380334686239-a98nfgmlqjct2g947hqvutk31jb3ln8o.apps.googleusercontent.com";
+  "978357353839-ka890tmfblih9tafgrcci4346m0hn726.apps.googleusercontent.com";
 
 const googleClient = new OAuth2Client(googleClientId);
 
