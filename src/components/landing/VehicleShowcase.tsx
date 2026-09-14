@@ -10,7 +10,7 @@ const vehicles = [
     id: "8",
     name: "Mercedes-Benz S-Class",
     category: "Luxury Sedan",
-    image: "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?q=80&w=2115&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?q=80&w=800&auto=format&fit=crop",
     passengers: 4,
     luggage: 2,
     transmission: "Auto",
@@ -20,7 +20,7 @@ const vehicles = [
     id: "15",
     name: "Volvo B11R Premium",
     category: "Luxury Coach",
-    image: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=2071&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=800&auto=format&fit=crop",
     passengers: 54,
     luggage: 45,
     transmission: "Auto",
@@ -30,7 +30,7 @@ const vehicles = [
     id: "3",
     name: "Toyota Innova Crysta",
     category: "Premium SUV",
-    image: "https://images.unsplash.com/photo-1590362891991-f776e747a588?q=80&w=2069&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1590362891991-f776e747a588?q=80&w=800&auto=format&fit=crop",
     passengers: 7,
     luggage: 4,
     transmission: "Manual",
@@ -79,6 +79,8 @@ export default function VehicleShowcase() {
                 <img 
                   src={vehicle.image} 
                   alt={vehicle.name} 
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out"
                 />
                 <div className="absolute top-4 right-4 z-20 bg-white/90 dark:bg-black/80 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-semibold text-gray-900 dark:text-white">

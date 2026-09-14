@@ -48,7 +48,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("token", userData.token);
-    router.push(redirectUrl || "/");
+    const destination = redirectUrl || (userData.role === "admin" ? "/admin" : "/dashboard");
+    router.push(destination);
   };
 
   const login = async (data: any, redirectUrl?: string) => {

@@ -8,11 +8,14 @@ import { LocalBusinessJsonLd } from "@/components/seo/JsonLd";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
+  preload: false,
 });
 
 export const viewport: Viewport = {
@@ -126,14 +129,21 @@ export default function RootLayout({
     >
       <head>
         <meta name="google-site-verification" content="laGSqizRoBJUAXl7Ri4ADRwvnSum7hEnq5YAy2GPOXY" />
-        {/* Google tag (gtag.js) */}
+        <LocalBusinessJsonLd />
+      </head>
+      <body className="min-h-full flex flex-col">
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+
+        {/* Google Tag Manager - lazyOnload so it never blocks page rendering */}
         <Script
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           src="https://www.googletagmanager.com/gtag/js?id=G-BYDR7NWVP7"
         />
         <Script
           id="google-analytics"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
@@ -143,13 +153,6 @@ export default function RootLayout({
             `,
           }}
         />
-        <LocalBusinessJsonLd />
-      </head>
-      <body className="min-h-full flex flex-col">
-        <AuthProvider>
-          {children}
-        </AuthProvider>
-        <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       </body>
     </html>
   );

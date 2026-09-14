@@ -4,10 +4,12 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Car, Calendar, Users, LogOut, Menu, X, Bell } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 import './Sidebar.css';
 
 const Sidebar = ({ mobileOpen, setMobileOpen }: { mobileOpen: boolean, setMobileOpen: (val: boolean) => void }) => {
   const pathname = usePathname();
+  const { logout } = useAuth();
   
   const navItems = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
@@ -52,7 +54,7 @@ const Sidebar = ({ mobileOpen, setMobileOpen }: { mobileOpen: boolean, setMobile
         </nav>
 
         <div className="sidebar-footer">
-          <button className="nav-link logout-btn">
+          <button onClick={logout} className="nav-link logout-btn cursor-pointer w-full text-left">
             <LogOut size={20} />
             <span>Logout</span>
           </button>

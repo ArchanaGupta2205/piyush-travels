@@ -1,8 +1,7 @@
 "use client";
 
 import { motion, type Variants } from "framer-motion";
-import { Car, Bus, Plane, Map, Briefcase, Heart, GraduationCap, MapPin, Sparkles, PlusCircle, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Car, Bus, Plane, Map, Briefcase, Heart, GraduationCap, MapPin, Sparkles, PlusCircle } from "lucide-react";
 
 const allServices = [
   {
@@ -102,13 +101,9 @@ export default function ServiceGrid() {
               </div>
               
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{service.title}</h3>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
                 {service.description}
               </p>
-              
-              <Button variant="ghost" className="p-0 hover:bg-transparent text-gray-900 dark:text-white font-semibold group/btn">
-                Book this service <ArrowRight className="ml-2 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-              </Button>
             </motion.div>
           ))}
         </motion.div>
