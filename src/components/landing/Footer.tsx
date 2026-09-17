@@ -42,20 +42,7 @@ export default function Footer() {
             <p className="text-gray-400 mb-6 leading-relaxed">
               Premium car and bus rental services offering unparalleled luxury, safety, and comfort for all your journey needs across India.
             </p>
-            <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-indigo-600 transition-colors">
-                <Facebook size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-indigo-600 transition-colors">
-                <Twitter size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-indigo-600 transition-colors">
-                <Instagram size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-indigo-600 transition-colors">
-                <Linkedin size={18} />
-              </a>
-            </div>
+            
           </div>
 
           <div>
@@ -84,15 +71,15 @@ export default function Footer() {
             <ul className="space-y-4 text-gray-400">
               <li className="flex items-start gap-3">
                 <MapPin className="text-indigo-400 shrink-0 mt-1" size={18} />
-                <span>123 Luxury Avenue, Connaught Place, New Delhi 110001</span>
+                <span>61/1,Panchanan tala road,Howrah,Howrah-711101</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="text-indigo-400 shrink-0" size={18} />
-                <span>+91 98765 43210</span>
+                <span>9163450745</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="text-indigo-400 shrink-0" size={18} />
-                <span>bookings@piyush-travels.com</span>
+                <span>piyushtravels79@gmail.com</span>
               </li>
             </ul>
           </div>
