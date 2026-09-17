@@ -7,7 +7,7 @@ import { fetchAPI } from "@/lib/api";
 import { motion } from "framer-motion";
 import { 
   ChevronLeft, Users, Cog, Fuel, CheckCircle2, 
-  MapPin, Shield, Star, Clock 
+  MapPin, Shield, Star, Clock, Headphones, Phone, MessageSquare, Mail, X 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
@@ -20,6 +20,7 @@ export default function VehicleDetailsPage() {
   const { user } = useAuth();
   const [vehicle, setVehicle] = useState<Vehicle | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [supportModalOpen, setSupportModalOpen] = useState(false);
 
   useEffect(() => {
     const loadVehicle = async () => {
@@ -63,10 +64,8 @@ export default function VehicleDetailsPage() {
   }
 
   const handleBook = () => {
-    if (user) {
+    if (vehicle?._id) {
       router.push(`/book/${vehicle._id}`);
-    } else {
-      router.push(`/login?redirect=${encodeURIComponent('/book/' + vehicle._id)}`);
     }
   };
 
@@ -236,7 +235,13 @@ export default function VehicleDetailsPage() {
                     Booking Request
                   </Button>
                   
-                  <Button variant="outline" className="w-full bg-zinc-50 dark:bg-transparent border-zinc-200 dark:border-zinc-700 text-zinc-800 dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl py-6">
+                  <Button 
+                    type="button"
+                    onClick={() => setSupportModalOpen(true)}
+                    variant="outline" 
+                    className="w-full bg-zinc-50 dark:bg-transparent border-zinc-200 dark:border-zinc-700 text-zinc-800 dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl py-6 flex items-center justify-center gap-2"
+                  >
+                    <Headphones size={18} />
                     Contact Support
                   </Button>
                 </div>
@@ -247,6 +252,104 @@ export default function VehicleDetailsPage() {
           </div>
         </div>
       </main>
+
+      {/* Contact Support Modal */}
+      {supportModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative text-zinc-900 dark:text-white">
+            <button
+              type="button"
+              onClick={() => setSupportModalOpen(false)}
+              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors"
+            >
+              <X size={18} />
+            </button>
+
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-2xl bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+                <Headphones size={20} />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold">24/7 Concierge Support</h3>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">Piyush Travels Reservation Desk</p>
+              </div>
+            </div>
+
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-6">
+              Have questions about booking the <strong className="text-zinc-900 dark:text-white">{vehicle.name}</strong> or need a custom multi-city itinerary? Choose how you&apos;d like to reach us:
+            </p>
+
+            <div className="space-y-3">
+              <a
+                href="tel:+919876543210"
+                className="flex items-center justify-between p-3.5 rounded-2xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/60 hover:border-indigo-500 transition-colors group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center">
+                    <Phone size={18} />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-sm font-semibold">Call Hotline Directly</p>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">+91 98765 43210 (24/7)</p>
+                  </div>
+                </div>
+                <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 group-hover:translate-x-0.5 transition-transform">
+                  Call Now &rarr;
+                </span>
+              </a>
+
+              <a
+                href={`https://wa.me/919876543210?text=${encodeURIComponent(`Hello Piyush Travels, I need assistance with booking the ${vehicle.brand} ${vehicle.name}.`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-3.5 rounded-2xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/60 hover:border-emerald-500 transition-colors group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                    <MessageSquare size={18} />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-sm font-semibold">WhatsApp Concierge</p>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">Instant response on chat</p>
+                  </div>
+                </div>
+                <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 group-hover:translate-x-0.5 transition-transform">
+                  Chat &rarr;
+                </span>
+              </a>
+
+              <a
+                href={`mailto:piyushtravels79@gmail.com?subject=${encodeURIComponent(`Booking Inquiry: ${vehicle.name}`)}`}
+                className="flex items-center justify-between p-3.5 rounded-2xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/60 hover:border-indigo-500 transition-colors group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                    <Mail size={18} />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-sm font-semibold">Email Us</p>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">piyushtravels79@gmail.com</p>
+                  </div>
+                </div>
+                <span className="text-xs font-semibold text-blue-600 dark:text-blue-400 group-hover:translate-x-0.5 transition-transform">
+                  Send &rarr;
+                </span>
+              </a>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setSupportModalOpen(false);
+                  router.push(user ? "/dashboard/support" : "/about#contact");
+                }}
+                className="w-full mt-2 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition-colors text-center shadow-md shadow-indigo-500/20"
+              >
+                Open Online Support Helpdesk
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>

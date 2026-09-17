@@ -28,9 +28,17 @@ const faqs = [
   }
 ];
 
+import { useAuth } from "@/context/AuthContext";
+
 export default function SupportPage() {
+  const { user } = useAuth();
   const [openFaq, setOpenFaq] = useState<number | null>(0);
-  const [formData, setFormData] = useState({ name: "", bookingId: "", message: "" });
+  const [formData, setFormData] = useState({ 
+    name: user?.name || "", 
+    email: user?.email || "",
+    bookingId: "", 
+    message: "" 
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState({ text: "", type: "" });
 
@@ -44,14 +52,20 @@ export default function SupportPage() {
     setFeedback({ text: "", type: "" });
 
     try {
+      const payload = {
+        ...formData,
+        name: formData.name || user?.name || "Valued Customer",
+        email: formData.email || user?.email || undefined,
+      };
+
       const res = await fetchAPI("/support", {
         method: "POST",
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (res.success) {
-        setFeedback({ text: "Message sent successfully! Our team will get back to you soon.", type: "success" });
-        setFormData({ name: "", bookingId: "", message: "" });
+        setFeedback({ text: "Message sent successfully! Our concierge team will get back to you soon.", type: "success" });
+        setFormData({ name: user?.name || "", email: user?.email || "", bookingId: "", message: "" });
       } else {
         setFeedback({ text: res.message || "Failed to send message.", type: "error" });
       }
@@ -80,35 +94,35 @@ export default function SupportPage() {
             <h3 className="text-xl font-bold text-white mb-6 relative z-10">24/7 Helpline</h3>
             
             <div className="space-y-6 relative z-10">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 shrink-0">
+              <a href="tel:+919876543210" className="flex items-start gap-4 group hover:opacity-90 transition-opacity">
+                <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 shrink-0 group-hover:scale-110 transition-transform">
                   <Phone size={18} />
                 </div>
                 <div>
                   <p className="text-sm text-zinc-400 mb-1">Call us directly</p>
-                  <p className="text-white font-medium">+91 98765 43210</p>
+                  <p className="text-white font-medium group-hover:text-purple-300 transition-colors">+91 98765 43210</p>
                 </div>
-              </div>
+              </a>
               
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 shrink-0">
+              <a href="mailto:piyushtravels79@gmail.com" className="flex items-start gap-4 group hover:opacity-90 transition-opacity">
+                <div className="w-10 h-10 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 shrink-0 group-hover:scale-110 transition-transform">
                   <Mail size={18} />
                 </div>
                 <div>
                   <p className="text-sm text-zinc-400 mb-1">Email support</p>
-                  <p className="text-white font-medium">support@piyush-travels.com</p>
+                  <p className="text-white font-medium group-hover:text-pink-300 transition-colors">piyushtravels79@gmail.com</p>
                 </div>
-              </div>
+              </a>
 
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
+              <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" className="flex items-start gap-4 group hover:opacity-90 transition-opacity">
+                <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 shrink-0 group-hover:scale-110 transition-transform">
                   <MessageSquare size={18} />
                 </div>
                 <div>
                   <p className="text-sm text-zinc-400 mb-1">WhatsApp Chat</p>
-                  <p className="text-white font-medium">+91 98765 43210</p>
+                  <p className="text-white font-medium group-hover:text-blue-300 transition-colors">+91 98765 43210</p>
                 </div>
-              </div>
+              </a>
             </div>
           </div>
         </div>
