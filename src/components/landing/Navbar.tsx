@@ -19,10 +19,9 @@ export default function Navbar() {
     };
     window.addEventListener("scroll", handleScroll);
     
-    // Check initial theme preference
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-      setTheme("light");
-    }
+    // Check initial theme preference and sync
+    const isDark = document.documentElement.classList.contains("dark");
+    setTheme(isDark ? "dark" : "light");
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -30,13 +29,15 @@ export default function Navbar() {
   const toggleTheme = () => {
     const newTheme = theme === "dark" ? "light" : "dark";
     setTheme(newTheme);
-    // In a real app with next-themes, this would trigger document class change
-    // For now, since we control the main container, we rely on standard tailwind dark mode if configured,
-    // or just toggle a class on body.
+    try {
+      localStorage.setItem("theme", newTheme);
+    } catch {
+      // ignore
+    }
     if (newTheme === "dark") {
-      document.documentElement.classList.add('dark');
+      document.documentElement.classList.add("dark");
     } else {
-      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.remove("dark");
     }
   };
 
@@ -54,8 +55,8 @@ export default function Navbar() {
       transition={{ duration: 0.6 }}
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-gray-200 dark:border-white/10 shadow-sm"
-          : "bg-transparent"
+          ? "bg-white/90 dark:bg-black/80 backdrop-blur-md border-b border-gray-200 dark:border-white/10 shadow-sm"
+          : "bg-white/80 dark:bg-black/30 backdrop-blur-md border-b border-gray-100 dark:border-white/10"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -77,7 +78,9 @@ export default function Navbar() {
                   key={link.name}
                   href={link.href}
                   className={`text-sm font-medium transition-colors hover:text-indigo-600 dark:hover:text-indigo-400 ${
-                    scrolled ? "text-gray-700 dark:text-gray-300" : "text-white"
+                    scrolled 
+                      ? "text-gray-700 dark:text-gray-300" 
+                      : "text-gray-800 dark:text-gray-200"
                   }`}
                 >
                   {link.name}
@@ -85,13 +88,14 @@ export default function Navbar() {
               ))}
             </div>
 
-            <div className="flex items-center space-x-4 border-l pl-4 border-gray-300 dark:border-gray-700">
+            <div className="flex items-center space-x-4 border-l pl-4 border-gray-200 dark:border-gray-700">
               <button
                 onClick={toggleTheme}
+                aria-label="Toggle theme"
                 className={`p-2 rounded-full transition-colors ${
                   scrolled 
                     ? "text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800" 
-                    : "text-white hover:bg-white/20"
+                    : "text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-white/10"
                 }`}
               >
                 {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
@@ -99,11 +103,11 @@ export default function Navbar() {
 
               {user ? (
                 <div className="flex items-center space-x-4">
-                  <span className={`text-sm ${scrolled ? "text-gray-700 dark:text-gray-300" : "text-white"}`}>
+                  <span className={`text-sm ${scrolled ? "text-gray-700 dark:text-gray-300" : "text-gray-800 dark:text-gray-200"}`}>
                     Hi, {user.name.split(" ")[0]}
                   </span>
                   <Link href={user.role === "admin" ? "/admin" : "/dashboard"}>
-                    <Button variant="outline" className={scrolled ? "" : "bg-white/10 border-white/20 text-white hover:bg-white/20"}>
+                    <Button variant="outline" className={scrolled ? "" : "bg-white dark:bg-white/10 border-gray-200 dark:border-white/20 text-gray-800 dark:text-white hover:bg-gray-50 dark:hover:bg-white/20"}>
                       Dashboard
                     </Button>
                   </Link>
@@ -114,7 +118,7 @@ export default function Navbar() {
               ) : (
                 <>
                   <Link href="/login">
-                    <Button variant="ghost" className={scrolled ? "" : "text-white hover:bg-white/20"}>
+                    <Button variant="ghost" className={scrolled ? "" : "text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-white/10"}>
                       Sign in
                     </Button>
                   </Link>
@@ -132,7 +136,7 @@ export default function Navbar() {
           <div className="flex md:hidden items-center">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className={`p-2 rounded-md ${scrolled ? "text-gray-900 dark:text-white" : "text-white"}`}
+              className="p-2 rounded-md text-gray-900 dark:text-white"
             >
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>

@@ -3,14 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchAPI } from "@/lib/api";
-import { Car, ArrowLeft, Save, Upload, Loader2 } from "lucide-react";
+import { ArrowLeft, Save } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import CloudinaryPhotoUploader from "@/app/admin/_components/CloudinaryPhotoUploader";
 
 export default function AddVehiclePage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
@@ -28,7 +28,7 @@ export default function AddVehiclePage() {
     minHours: "",
     priceOnRequest: false,
     location: "New Delhi",
-    images: "",
+    images: [] as string[],
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -40,53 +40,16 @@ export default function AddVehiclePage() {
     }
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-
-    setIsUploading(true);
-    setError("");
-
-    try {
-      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-      const uploadedUrls: string[] = [];
-
-      for (let i = 0; i < files.length; i++) {
-        const fileData = new FormData();
-        fileData.append("file", files[i]);
-        fileData.append("folder", "piyush-travels/vehicles");
-
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
-          body: fileData,
-        });
-
-        const data = await res.json();
-        if (data.success && data.url) {
-          uploadedUrls.push(data.url);
-        } else {
-          throw new Error(data.message || "Failed to upload image");
-        }
-      }
-
-      const existingImages = formData.images
-        ? formData.images.split(",").map((s) => s.trim()).filter(Boolean)
-        : [];
-      const combined = [...existingImages, ...uploadedUrls].join(", ");
-      setFormData((prev) => ({ ...prev, images: combined }));
-    } catch (err: any) {
-      setError(err.message || "Image upload failed");
-    } finally {
-      setIsUploading(false);
-      if (e.target) e.target.value = "";
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setError("");
+
+    if (formData.images.length === 0) {
+      setError("Please upload at least one vehicle photo before saving.");
+      return;
+    }
+
+    setIsSubmitting(true);
 
     try {
       // Process payload
@@ -96,7 +59,7 @@ export default function AddVehiclePage() {
       payload.ratePerHour = payload.ratePerHour ? Number(payload.ratePerHour) : undefined;
       payload.ratePerKm = payload.ratePerKm ? Number(payload.ratePerKm) : undefined;
       payload.minHours = payload.minHours ? Number(payload.minHours) : undefined;
-      payload.images = payload.images.split(",").map((i: string) => i.trim()).filter(Boolean);
+      payload.images = formData.images;
 
       const res = await fetchAPI("/vehicles", {
         method: "POST",
@@ -125,7 +88,7 @@ export default function AddVehiclePage() {
           <h1 className="text-3xl font-bold text-white flex items-center gap-2">
             Add New Vehicle
           </h1>
-          <p className="text-zinc-400">Fill in the details to add a vehicle to the fleet.</p>
+          <p className="text-zinc-400">Fill in the details and upload photos to add a vehicle to the fleet.</p>
         </div>
       </div>
 
@@ -158,13 +121,11 @@ export default function AddVehiclePage() {
                 <option value="Minibus">Minibus</option>
                 <option value="Luxury">Luxury</option>
                 <option value="Luxury Bus">Luxury Bus</option>
-                <option value="Bus">Bus</option>
-                <option value="Van">Van</option>
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-400">Base Location</label>
-              <input type="text" name="location" value={formData.location} onChange={handleChange} required className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-white outline-none focus:border-indigo-500" />
+              <label className="text-sm font-medium text-zinc-400">Location Base</label>
+              <input type="text" name="location" value={formData.location} onChange={handleChange} required className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-white outline-none focus:border-indigo-500" placeholder="e.g. New Delhi" />
             </div>
           </div>
         </div>
@@ -234,38 +195,12 @@ export default function AddVehiclePage() {
           </label>
         </div>
 
-        {/* Media */}
-        <div>
-          <div className="flex justify-between items-center mb-4 border-b border-zinc-800 pb-2">
-            <h2 className="text-xl font-bold text-white">Media & Photos</h2>
-            <label className="flex items-center gap-2 px-4 py-2 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-400 border border-indigo-500/30 rounded-xl cursor-pointer text-sm font-medium transition-colors">
-              {isUploading ? <Loader2 size={16} className="animate-spin" /> : <Upload size={16} />}
-              <span>{isUploading ? "Uploading to Cloudinary..." : "Upload Photo"}</span>
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                disabled={isUploading}
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-            </label>
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-zinc-400">
-              Image URLs (comma separated or upload via Cloudinary button above)
-            </label>
-            <input
-              type="text"
-              name="images"
-              value={formData.images}
-              onChange={handleChange}
-              required
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-white outline-none focus:border-indigo-500"
-              placeholder="https://res.cloudinary.com/..., https://..."
-            />
-          </div>
-        </div>
+        {/* Media & Photos - Upload Directly to Cloudinary */}
+        <CloudinaryPhotoUploader
+          images={formData.images}
+          onChange={(newImages) => setFormData((prev) => ({ ...prev, images: newImages }))}
+          disabled={isSubmitting}
+        />
 
         <div className="pt-6 border-t border-zinc-800 flex justify-end">
           <Button type="submit" disabled={isSubmitting} className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-2.5 h-auto text-base rounded-xl font-medium shadow-[0_0_15px_rgba(99,102,241,0.4)] flex items-center gap-2">

@@ -1,3 +1,5 @@
+import Navbar from "@/components/landing/Navbar";
+import Footer from "@/components/landing/Footer";
 import VehicleListing from "@/components/vehicles/VehicleListing";
 import type { Metadata } from "next";
 
@@ -25,23 +27,30 @@ export const metadata: Metadata = {
 
 export default function VehiclesPage() {
   return (
-    <main className="min-h-screen bg-black pt-24 pb-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Page Header */}
-        <div className="mb-12 md:mb-16">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">Premium Fleet</span>
-          </h1>
-          <p className="text-xl text-zinc-400 max-w-2xl">
-            Choose from our meticulously maintained selection of vehicles. Whether you need a luxury car for a business meeting or a spacious SUV for a family trip, we have you covered.
-          </p>
-        </div>
+    <div className="min-h-screen bg-zinc-50 dark:bg-black selection:bg-indigo-500/30 text-zinc-900 dark:text-white flex flex-col">
+      <Navbar />
 
-        {/* Listing Component */}
-        <VehicleListing />
-        
-      </div>
-    </main>
+      <main className="flex-grow pt-28 pb-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Page Header */}
+          <div className="mb-12 md:mb-16">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-zinc-900 dark:text-white mb-6">
+              Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-500">Premium Fleet</span>
+            </h1>
+            <p className="text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl">
+              Choose from our meticulously maintained selection of vehicles. Whether you need a luxury car for a business meeting or a spacious SUV for a family trip, we have you covered.
+            </p>
+          </div>
+
+          {/* Listing Component */}
+          <VehicleListing />
+          
+        </div>
+      </main>
+
+      <Footer />
+    </div>
   );
 }
+

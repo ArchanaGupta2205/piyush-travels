@@ -21,6 +21,31 @@ export async function GET(req: NextRequest) {
     const bookings = await Booking.find({ paymentStatus: "Completed" });
     const totalRevenue = bookings.reduce((sum, b) => sum + (b.totalAmount || 0), 0);
 
+    // Calculate real month-over-month revenue trend
+    const now = new Date();
+    const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+
+    const thisMonthCompleted = await Booking.find({
+      paymentStatus: "Completed",
+      createdAt: { $gte: currentMonthStart },
+    });
+    const thisMonthRevenue = thisMonthCompleted.reduce((sum, b) => sum + (b.totalAmount || 0), 0);
+
+    const lastMonthCompleted = await Booking.find({
+      paymentStatus: "Completed",
+      createdAt: { $gte: lastMonthStart, $lte: lastMonthEnd },
+    });
+    const lastMonthRevenue = lastMonthCompleted.reduce((sum, b) => sum + (b.totalAmount || 0), 0);
+
+    let revenueTrend: number | null = null;
+    if (lastMonthRevenue > 0) {
+      revenueTrend = Math.round(((thisMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100 * 10) / 10;
+    } else if (thisMonthRevenue > 0) {
+      revenueTrend = 100;
+    }
+
     return NextResponse.json({
       success: true,
       data: {
@@ -28,6 +53,7 @@ export async function GET(req: NextRequest) {
         totalVehicles,
         activeBookings,
         pendingRequests,
+        revenueTrend,
       },
     });
   } catch (error) {

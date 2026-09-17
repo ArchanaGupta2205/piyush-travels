@@ -35,7 +35,7 @@ export async function POST(
       await sendEmail({
         email: booking.passengerDetails.email,
         subject: `Your Quote is Ready - ${booking.bookingId}`,
-        message: `Great news! The quote for your booking request (${booking.bookingId}) is ready. Total amount: INR ${totalAmount.toLocaleString()}. Log in to your dashboard to complete the payment.`,
+        message: `Great news! The quote for your booking request (${booking.bookingId}) is ready. Total amount: ₹${totalAmount.toLocaleString('en-IN')}. Log in to your dashboard to complete the payment.`,
       });
     } catch {
       // Ignore mail errors

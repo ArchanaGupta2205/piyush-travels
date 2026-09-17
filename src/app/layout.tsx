@@ -66,6 +66,14 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  icons: {
+    icon: [
+      { url: "/favicon.png", type: "image/png" },
+      { url: "/favicon.ico" },
+    ],
+    apple: "/favicon.png",
+    shortcut: "/favicon.png",
+  },
   openGraph: {
     type: "website",
     locale: "en_IN",
@@ -130,6 +138,22 @@ export default function RootLayout({
       <head>
         <meta name="google-site-verification" content="laGSqizRoBJUAXl7Ri4ADRwvnSum7hEnq5YAy2GPOXY" />
         <LocalBusinessJsonLd />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var saved = localStorage.getItem('theme');
+                  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
       </head>
       <body className="min-h-full flex flex-col">
         <AuthProvider>

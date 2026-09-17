@@ -3,9 +3,10 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { fetchAPI } from "@/lib/api";
-import { ArrowLeft, Save, Upload, Loader2 } from "lucide-react";
+import { ArrowLeft, Save } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import CloudinaryPhotoUploader from "@/app/admin/_components/CloudinaryPhotoUploader";
 
 export default function EditVehiclePage() {
   const router = useRouter();
@@ -13,7 +14,6 @@ export default function EditVehiclePage() {
   const id = params.id as string;
   
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -32,7 +32,7 @@ export default function EditVehiclePage() {
     minHours: "",
     priceOnRequest: false,
     location: "New Delhi",
-    images: "",
+    images: [] as string[],
   });
 
   useEffect(() => {
@@ -62,7 +62,7 @@ export default function EditVehiclePage() {
           minHours: v.minHours?.toString() || "",
           priceOnRequest: v.priceOnRequest || false,
           location: v.location || "New Delhi",
-          images: v.images?.join(", ") || "",
+          images: Array.isArray(v.images) ? v.images : [],
         });
       } else {
         setError(res.message || "Failed to load vehicle");
@@ -83,62 +83,26 @@ export default function EditVehiclePage() {
     }
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-
-    setIsUploading(true);
-    setError("");
-
-    try {
-      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-      const uploadedUrls: string[] = [];
-
-      for (let i = 0; i < files.length; i++) {
-        const fileData = new FormData();
-        fileData.append("file", files[i]);
-        fileData.append("folder", "piyush-travels/vehicles");
-
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
-          body: fileData,
-        });
-
-        const data = await res.json();
-        if (data.success && data.url) {
-          uploadedUrls.push(data.url);
-        } else {
-          throw new Error(data.message || "Failed to upload image");
-        }
-      }
-
-      const existingImages = formData.images
-        ? formData.images.split(",").map((s) => s.trim()).filter(Boolean)
-        : [];
-      const combined = [...existingImages, ...uploadedUrls].join(", ");
-      setFormData((prev) => ({ ...prev, images: combined }));
-    } catch (err: any) {
-      setError(err.message || "Image upload failed");
-    } finally {
-      setIsUploading(false);
-      if (e.target) e.target.value = "";
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setError("");
 
+    if (formData.images.length === 0) {
+      setError("Please upload at least one vehicle photo before saving.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
+      // Process payload
       const payload: any = { ...formData };
       payload.seats = Number(payload.seats);
       payload.pricePerDay = payload.pricePerDay ? Number(payload.pricePerDay) : undefined;
       payload.ratePerHour = payload.ratePerHour ? Number(payload.ratePerHour) : undefined;
       payload.ratePerKm = payload.ratePerKm ? Number(payload.ratePerKm) : undefined;
       payload.minHours = payload.minHours ? Number(payload.minHours) : undefined;
-      payload.images = payload.images.split(",").map((i: string) => i.trim()).filter(Boolean);
+      payload.images = formData.images;
 
       const res = await fetchAPI(`/vehicles/${id}`, {
         method: "PUT",
@@ -159,8 +123,9 @@ export default function EditVehiclePage() {
 
   if (isLoading) {
     return (
-      <div className="flex-grow flex justify-center items-center h-[60vh]">
-        <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+      <div className="p-6 text-zinc-400 flex items-center gap-2">
+        <div className="w-5 h-5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+        <span>Loading vehicle details...</span>
       </div>
     );
   }
@@ -175,7 +140,7 @@ export default function EditVehiclePage() {
           <h1 className="text-3xl font-bold text-white flex items-center gap-2">
             Edit Vehicle
           </h1>
-          <p className="text-zinc-400">Update vehicle details.</p>
+          <p className="text-zinc-400">Update vehicle specifications, pricing, and photos.</p>
         </div>
       </div>
 
@@ -208,12 +173,10 @@ export default function EditVehiclePage() {
                 <option value="Minibus">Minibus</option>
                 <option value="Luxury">Luxury</option>
                 <option value="Luxury Bus">Luxury Bus</option>
-                <option value="Bus">Bus</option>
-                <option value="Van">Van</option>
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-400">Base Location</label>
+              <label className="text-sm font-medium text-zinc-400">Location Base</label>
               <input type="text" name="location" value={formData.location} onChange={handleChange} required className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-white outline-none focus:border-indigo-500" />
             </div>
           </div>
@@ -284,38 +247,12 @@ export default function EditVehiclePage() {
           </label>
         </div>
 
-        {/* Media */}
-        <div>
-          <div className="flex justify-between items-center mb-4 border-b border-zinc-800 pb-2">
-            <h2 className="text-xl font-bold text-white">Media & Photos</h2>
-            <label className="flex items-center gap-2 px-4 py-2 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-400 border border-indigo-500/30 rounded-xl cursor-pointer text-sm font-medium transition-colors">
-              {isUploading ? <Loader2 size={16} className="animate-spin" /> : <Upload size={16} />}
-              <span>{isUploading ? "Uploading to Cloudinary..." : "Upload Photo"}</span>
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                disabled={isUploading}
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-            </label>
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-zinc-400">
-              Image URLs (comma separated or upload via Cloudinary button above)
-            </label>
-            <input
-              type="text"
-              name="images"
-              value={formData.images}
-              onChange={handleChange}
-              required
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-white outline-none focus:border-indigo-500"
-              placeholder="https://res.cloudinary.com/..., https://..."
-            />
-          </div>
-        </div>
+        {/* Media & Photos - Upload Directly to Cloudinary */}
+        <CloudinaryPhotoUploader
+          images={formData.images}
+          onChange={(newImages) => setFormData((prev) => ({ ...prev, images: newImages }))}
+          disabled={isSubmitting}
+        />
 
         <div className="pt-6 border-t border-zinc-800 flex justify-end">
           <Button type="submit" disabled={isSubmitting} className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-2.5 h-auto text-base rounded-xl font-medium shadow-[0_0_15px_rgba(99,102,241,0.4)] flex items-center gap-2">

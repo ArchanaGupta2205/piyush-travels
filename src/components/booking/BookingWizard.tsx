@@ -151,22 +151,22 @@ export default function BookingWizard({ vehicle }: BookingWizardProps) {
 
   if (!user) {
     return (
-      <div className="w-full flex flex-col items-center justify-center py-20 bg-zinc-900/50 border border-zinc-800 rounded-3xl backdrop-blur-sm px-6 text-center">
-        <h2 className="text-3xl font-bold text-white mb-4">Sign In Required</h2>
-        <p className="text-zinc-400 mb-8 max-w-md text-lg">
+      <div className="w-full flex flex-col items-center justify-center py-20 bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-3xl backdrop-blur-sm px-6 text-center shadow-sm dark:shadow-none">
+        <h2 className="text-3xl font-bold text-zinc-900 dark:text-white mb-4">Sign In Required</h2>
+        <p className="text-zinc-600 dark:text-zinc-400 mb-8 max-w-md text-lg">
           Please log in or create an account to book the {vehicle.name}.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <Button
             onClick={() => router.push(`/login?redirect=${encodeURIComponent('/book/' + vehicle._id)}`)}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-6 text-lg font-semibold w-full sm:w-auto"
+            className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-6 text-lg font-semibold w-full sm:w-auto shadow-md shadow-purple-500/20"
           >
             Log In
           </Button>
           <Button
             onClick={() => router.push(`/register?redirect=${encodeURIComponent('/book/' + vehicle._id)}`)}
             variant="outline"
-            className="border-zinc-700 hover:bg-zinc-800 text-white px-8 py-6 text-lg font-semibold w-full sm:w-auto"
+            className="border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-800 dark:text-white px-8 py-6 text-lg font-semibold w-full sm:w-auto"
           >
             Register
           </Button>
@@ -179,9 +179,9 @@ export default function BookingWizard({ vehicle }: BookingWizardProps) {
     <div className="w-full">
       {/* Stepper Header */}
       <div className="mb-12">
-        <h1 className="text-3xl font-bold text-white mb-8 text-center">Complete Your Booking</h1>
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-white mb-8 text-center">Complete Your Booking</h1>
         <div className="flex items-center justify-between relative">
-          <div className="absolute left-0 right-0 top-1/2 h-0.5 bg-zinc-800 -z-10" />
+          <div className="absolute left-0 right-0 top-1/2 h-0.5 bg-zinc-200 dark:bg-zinc-800 -z-10" />
           {steps.map((label, idx) => (
             <div key={label} className="flex flex-col items-center gap-2">
               <div
@@ -189,19 +189,19 @@ export default function BookingWizard({ vehicle }: BookingWizardProps) {
                     ? "bg-green-500 text-white"
                     : idx === currentStep
                       ? "bg-purple-600 text-white shadow-[0_0_15px_rgba(168,85,247,0.5)]"
-                      : "bg-zinc-900 text-zinc-500 border border-zinc-700"
+                      : "bg-zinc-100 dark:bg-zinc-900 text-zinc-500 border border-zinc-300 dark:border-zinc-700"
                   }`}
               >
                 {idx < currentStep ? <Check size={18} /> : idx + 1}
               </div>
-              <span className="text-xs font-medium text-zinc-400 hidden sm:block">{label}</span>
+              <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400 hidden sm:block">{label}</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* Step Content */}
-      <div className="bg-zinc-900/50 border border-zinc-800 rounded-3xl p-6 md:p-10 backdrop-blur-sm min-h-[400px] flex flex-col">
+      <div className="bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 md:p-10 backdrop-blur-sm min-h-[400px] flex flex-col shadow-sm dark:shadow-none">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep}
@@ -213,42 +213,42 @@ export default function BookingWizard({ vehicle }: BookingWizardProps) {
           >
             {currentStep === 0 && (
               <div className="space-y-6">
-                <h2 className="text-2xl font-bold text-white mb-6">Pickup & Drop-off</h2>
+                <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">Pickup & Drop-off</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-zinc-400 mb-2">Pickup Location</label>
+                    <label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-2">Pickup Location</label>
                     <input
                       type="text"
-                      className="w-full bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 text-white outline-none focus:border-purple-500"
+                      className="w-full bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-zinc-900 dark:text-white outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors"
                       value={formData.pickupDetails?.pickupLocation}
                       onChange={(e) => updatePickup({ pickupLocation: e.target.value })}
                       placeholder="Enter pickup address"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-zinc-400 mb-2">Drop-off Location</label>
+                    <label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-2">Drop-off Location</label>
                     <input
                       type="text"
-                      className="w-full bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 text-white outline-none focus:border-purple-500"
+                      className="w-full bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-zinc-900 dark:text-white outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors"
                       value={formData.pickupDetails?.dropoffLocation}
                       onChange={(e) => updatePickup({ dropoffLocation: e.target.value })}
                       placeholder="Enter drop-off address"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-zinc-400 mb-2">Pickup Date & Time</label>
+                    <label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-2">Pickup Date & Time</label>
                     <input
                       type="datetime-local"
-                      className="w-full bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 text-white outline-none focus:border-purple-500"
+                      className="w-full bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-zinc-900 dark:text-white outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors"
                       value={formData.pickupDetails?.pickupDate}
                       onChange={(e) => updatePickup({ pickupDate: e.target.value })}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-zinc-400 mb-2">Return Date & Time</label>
+                    <label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-2">Return Date & Time</label>
                     <input
                       type="datetime-local"
-                      className="w-full bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 text-white outline-none focus:border-purple-500"
+                      className="w-full bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-zinc-900 dark:text-white outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors"
                       value={formData.pickupDetails?.returnDate}
                       onChange={(e) => updatePickup({ returnDate: e.target.value })}
                     />
@@ -259,40 +259,40 @@ export default function BookingWizard({ vehicle }: BookingWizardProps) {
 
             {currentStep === 1 && (
               <div className="space-y-6">
-                <h2 className="text-2xl font-bold text-white mb-6">Passenger Details</h2>
+                <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">Passenger Details</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-zinc-400 mb-2">First Name</label>
+                    <label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-2">First Name</label>
                     <input
                       type="text"
-                      className="w-full bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 text-white outline-none focus:border-purple-500"
+                      className="w-full bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-zinc-900 dark:text-white outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors"
                       value={formData.passengerDetails?.firstName}
                       onChange={(e) => updatePassenger({ firstName: e.target.value })}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-zinc-400 mb-2">Last Name</label>
+                    <label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-2">Last Name</label>
                     <input
                       type="text"
-                      className="w-full bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 text-white outline-none focus:border-purple-500"
+                      className="w-full bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-zinc-900 dark:text-white outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors"
                       value={formData.passengerDetails?.lastName}
                       onChange={(e) => updatePassenger({ lastName: e.target.value })}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-zinc-400 mb-2">Email</label>
+                    <label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-2">Email</label>
                     <input
                       type="email"
-                      className="w-full bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 text-white outline-none focus:border-purple-500"
+                      className="w-full bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-zinc-900 dark:text-white outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors"
                       value={formData.passengerDetails?.email}
                       onChange={(e) => updatePassenger({ email: e.target.value })}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-zinc-400 mb-2">Phone</label>
+                    <label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-2">Phone</label>
                     <input
                       type="tel"
-                      className="w-full bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 text-white outline-none focus:border-purple-500"
+                      className="w-full bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-zinc-900 dark:text-white outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors"
                       value={formData.passengerDetails?.phone}
                       onChange={(e) => updatePassenger({ phone: e.target.value })}
                     />
@@ -303,27 +303,27 @@ export default function BookingWizard({ vehicle }: BookingWizardProps) {
 
             {currentStep === 2 && (
               <div className="space-y-6">
-                <h2 className="text-2xl font-bold text-white mb-6">Driver Preference</h2>
+                <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">Driver Preference</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div
                     onClick={() => setFormData({ ...formData, driverPreference: "self-drive" })}
                     className={`p-6 rounded-2xl border-2 cursor-pointer transition-colors ${formData.driverPreference === "self-drive"
-                        ? "border-purple-500 bg-purple-500/10"
-                        : "border-zinc-800 bg-zinc-800/30 hover:border-zinc-700"
+                        ? "border-purple-600 bg-purple-50 dark:bg-purple-500/10"
+                        : "border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/30 hover:border-zinc-300 dark:hover:border-zinc-700"
                       }`}
                   >
-                    <h3 className="text-xl font-bold text-white mb-2">Self Drive</h3>
-                    <p className="text-zinc-400 text-sm">Experience the thrill of driving yourself. Valid driver's license required.</p>
+                    <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">Self Drive</h3>
+                    <p className="text-zinc-600 dark:text-zinc-400 text-sm">Experience the thrill of driving yourself. Valid driver&apos;s license required.</p>
                   </div>
                   <div
                     onClick={() => setFormData({ ...formData, driverPreference: "chauffeur" })}
                     className={`p-6 rounded-2xl border-2 cursor-pointer transition-colors ${formData.driverPreference === "chauffeur"
-                        ? "border-purple-500 bg-purple-500/10"
-                        : "border-zinc-800 bg-zinc-800/30 hover:border-zinc-700"
+                        ? "border-purple-600 bg-purple-50 dark:bg-purple-500/10"
+                        : "border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/30 hover:border-zinc-300 dark:hover:border-zinc-700"
                       }`}
                   >
-                    <h3 className="text-xl font-bold text-white mb-2">Chauffeur Included</h3>
-                    <p className="text-zinc-400 text-sm">
+                    <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">Chauffeur Included</h3>
+                    <p className="text-zinc-600 dark:text-zinc-400 text-sm">
                       Relax and enjoy the ride with our professional drivers.
                       {!vehicle.driverIncluded && " (Additional ₹1,500/day)"}
                     </p>
@@ -334,34 +334,34 @@ export default function BookingWizard({ vehicle }: BookingWizardProps) {
 
             {currentStep === 3 && (
               <div className="space-y-6">
-                <h2 className="text-2xl font-bold text-white mb-6">Booking Summary</h2>
-                <div className="bg-zinc-800/30 rounded-2xl p-6 border border-zinc-800">
-                  <div className="flex justify-between items-center mb-6 pb-6 border-b border-zinc-800">
+                <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">Booking Summary</h2>
+                <div className="bg-zinc-50 dark:bg-zinc-800/30 rounded-2xl p-6 border border-zinc-200 dark:border-zinc-800">
+                  <div className="flex justify-between items-center mb-6 pb-6 border-b border-zinc-200 dark:border-zinc-800">
                     <div>
-                      <h3 className="text-xl font-bold text-white">{vehicle.name}</h3>
-                      <p className="text-zinc-400">{vehicle.brand} • {vehicle.type}</p>
+                      <h3 className="text-xl font-bold text-zinc-900 dark:text-white">{vehicle.name}</h3>
+                      <p className="text-zinc-500 dark:text-zinc-400">{vehicle.brand} • {vehicle.type}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl font-bold text-purple-400">Price on Request</p>
-                      <p className="text-zinc-500 text-sm">To be quoted by admin</p>
+                      <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">Price on Request</p>
+                      <p className="text-zinc-500 dark:text-zinc-400 text-sm">To be quoted by admin</p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <p className="text-zinc-500 mb-1">Pickup</p>
-                      <p className="text-white font-medium">{formData.pickupDetails?.pickupLocation}</p>
-                      <p className="text-zinc-400">{new Date(formData.pickupDetails?.pickupDate || "").toLocaleString()}</p>
+                      <p className="text-zinc-500 dark:text-zinc-400 mb-1">Pickup</p>
+                      <p className="text-zinc-900 dark:text-white font-medium">{formData.pickupDetails?.pickupLocation}</p>
+                      <p className="text-zinc-600 dark:text-zinc-400">{new Date(formData.pickupDetails?.pickupDate || "").toLocaleString()}</p>
                     </div>
                     <div>
-                      <p className="text-zinc-500 mb-1">Drop-off</p>
-                      <p className="text-white font-medium">{formData.pickupDetails?.dropoffLocation}</p>
-                      <p className="text-zinc-400">{new Date(formData.pickupDetails?.returnDate || "").toLocaleString()}</p>
+                      <p className="text-zinc-500 dark:text-zinc-400 mb-1">Drop-off</p>
+                      <p className="text-zinc-900 dark:text-white font-medium">{formData.pickupDetails?.dropoffLocation}</p>
+                      <p className="text-zinc-600 dark:text-zinc-400">{new Date(formData.pickupDetails?.returnDate || "").toLocaleString()}</p>
                     </div>
-                    <div className="col-span-2 pt-4 mt-4 border-t border-zinc-800">
-                      <p className="text-zinc-500 mb-1">Passenger</p>
-                      <p className="text-white font-medium">{formData.passengerDetails?.firstName} {formData.passengerDetails?.lastName}</p>
-                      <p className="text-zinc-400">{formData.passengerDetails?.email} • {formData.passengerDetails?.phone}</p>
+                    <div className="col-span-2 pt-4 mt-4 border-t border-zinc-200 dark:border-zinc-800">
+                      <p className="text-zinc-500 dark:text-zinc-400 mb-1">Passenger</p>
+                      <p className="text-zinc-900 dark:text-white font-medium">{formData.passengerDetails?.firstName} {formData.passengerDetails?.lastName}</p>
+                      <p className="text-zinc-600 dark:text-zinc-400">{formData.passengerDetails?.email} • {formData.passengerDetails?.phone}</p>
                     </div>
                   </div>
                 </div>
@@ -371,24 +371,24 @@ export default function BookingWizard({ vehicle }: BookingWizardProps) {
             {currentStep === 4 && completedBooking && (
               <div className="flex flex-col items-center justify-center h-full text-center space-y-6 py-10">
                 <div className="w-24 h-24 bg-purple-500/20 rounded-full flex items-center justify-center mb-4">
-                  <div className="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center text-white">
+                  <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center text-white">
                     <Check size={40} />
                   </div>
                 </div>
-                <h2 className="text-4xl font-bold text-white">Request Submitted!</h2>
-                <p className="text-zinc-400 text-lg max-w-md">
+                <h2 className="text-4xl font-bold text-zinc-900 dark:text-white">Request Submitted!</h2>
+                <p className="text-zinc-600 dark:text-zinc-400 text-lg max-w-md">
                   Your booking request has been successfully sent. Our team will review your trip details and provide a custom price quote shortly.
                 </p>
 
-                <div className="bg-zinc-800/50 px-8 py-4 rounded-2xl border border-zinc-700 my-8">
-                  <p className="text-sm text-zinc-500 mb-1">Request ID</p>
-                  <p className="text-2xl font-mono text-purple-400 font-bold">{completedBooking.bookingId}</p>
+                <div className="bg-zinc-50 dark:bg-zinc-800/50 px-8 py-4 rounded-2xl border border-zinc-200 dark:border-zinc-700 my-8">
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-1">Request ID</p>
+                  <p className="text-2xl font-mono text-purple-600 dark:text-purple-400 font-bold">{completedBooking.bookingId}</p>
                 </div>
 
                 <Button
                   onClick={() => router.push('/dashboard')}
                   variant="outline"
-                  className="gap-2 border-zinc-700 hover:bg-zinc-800 text-white"
+                  className="gap-2 border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-900 dark:text-white"
                 >
                   View My Requests
                 </Button>
@@ -399,9 +399,9 @@ export default function BookingWizard({ vehicle }: BookingWizardProps) {
 
         {/* Footer Navigation */}
         {currentStep >= 0 && currentStep < steps.length - 1 && (
-          <div className="mt-8 pt-6 border-t border-zinc-800 flex justify-between items-center">
+          <div className="mt-8 pt-6 border-t border-zinc-200 dark:border-zinc-800 flex justify-between items-center">
             {currentStep > 0 ? (
-              <Button variant="ghost" onClick={prevStep} className="text-zinc-400 hover:text-white">
+              <Button variant="ghost" onClick={prevStep} className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white">
                 Back
               </Button>
             ) : (
@@ -411,7 +411,7 @@ export default function BookingWizard({ vehicle }: BookingWizardProps) {
               <Button 
                 onClick={currentStep === 3 ? submitRequest : handleNext} 
                 disabled={isLoading}
-                className="bg-white text-black hover:bg-zinc-200 px-8 font-semibold"
+                className="bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200 px-8 font-semibold shadow-sm transition-colors"
               >
                 {isLoading ? "Processing..." : currentStep === 3 ? "Submit Request" : "Continue"}
               </Button>

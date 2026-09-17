@@ -2,17 +2,24 @@
 
 import { useEffect, useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { DollarSign, Car, CalendarClock, Activity } from 'lucide-react';
+import { IndianRupee, Car, CalendarClock, Activity } from 'lucide-react';
 import StatCard from './_components/StatCard';
 import { fetchAPI } from '@/lib/api';
 import './Dashboard.css';
 
 export default function Dashboard() {
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<{
+    revenue: number;
+    totalVehicles: number;
+    activeBookings: number;
+    pendingRequests: number;
+    revenueTrend?: number | null;
+  }>({
     revenue: 0,
     totalVehicles: 0,
     activeBookings: 0,
-    pendingRequests: 0
+    pendingRequests: 0,
+    revenueTrend: null,
   });
   const [data, setData] = useState<any[]>([]);
   const [recentBookings, setRecentBookings] = useState<any[]>([]);
@@ -49,6 +56,8 @@ export default function Dashboard() {
     return <div style={{ padding: '2rem', color: 'var(--text-primary)' }}>Loading dashboard...</div>;
   }
 
+  const totalChartRevenue = data.reduce((sum, item) => sum + (Number(item.revenue) || 0), 0);
+
   return (
     <div className="dashboard">
       <div className="dashboard-header">
@@ -59,46 +68,58 @@ export default function Dashboard() {
       <div className="stats-grid">
         <StatCard 
           title="Total Revenue" 
-          value={`$${stats.revenue.toLocaleString()}`} 
-          icon={DollarSign} 
-          trend={12.5} 
-          trendText="vs last month"
+          value={`₹${stats.revenue.toLocaleString('en-IN')}`} 
+          icon={IndianRupee} 
+          trend={stats.revenueTrend !== null && stats.revenueTrend !== undefined ? stats.revenueTrend : undefined} 
+          trendText={stats.revenueTrend !== null && stats.revenueTrend !== undefined ? "vs last month" : undefined}
           colorClass="primary" 
         />
         <StatCard 
           title="Total Vehicles" 
           value={stats.totalVehicles} 
           icon={Car} 
-          trend={4.2} 
-          trendText="vs last month"
           colorClass="info" 
         />
         <StatCard 
           title="Active Bookings" 
           value={stats.activeBookings} 
           icon={Activity} 
-          trend={-2.4} 
-          trendText="vs last month"
           colorClass="success" 
         />
         <StatCard 
           title="Pending Requests" 
           value={stats.pendingRequests} 
           icon={CalendarClock} 
-          trend={8.1} 
-          trendText="needs attention"
+          trendText={stats.pendingRequests > 0 ? "needs action" : undefined}
           colorClass="warning" 
         />
       </div>
 
       <div className="dashboard-content">
         <div className="chart-section glass-panel">
-          <div className="section-header">
-            <h3>Revenue Overview</h3>
+          <div className="section-header flex-between" style={{ alignItems: 'flex-start' }}>
+            <div>
+              <h3>Revenue Overview</h3>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                Real-time booking revenue from completed payments
+              </p>
+            </div>
+            {totalChartRevenue === 0 && (
+              <span style={{ 
+                fontSize: '0.75rem', 
+                padding: '4px 10px', 
+                borderRadius: '9999px', 
+                background: 'rgba(255,255,255,0.06)', 
+                color: 'var(--text-muted)',
+                border: '1px solid var(--border-glass)' 
+              }}>
+                Live: ₹0 revenue yet
+              </span>
+            )}
           </div>
           <div className="chart-container">
             <ResponsiveContainer width="100%" height={300}>
-              <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+              <AreaChart data={data} margin={{ top: 10, right: 30, left: 10, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="var(--color-primary)" stopOpacity={0.8}/>
@@ -107,8 +128,9 @@ export default function Dashboard() {
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border-glass)" vertical={false} />
                 <XAxis dataKey="name" stroke="var(--text-muted)" />
-                <YAxis stroke="var(--text-muted)" />
+                <YAxis stroke="var(--text-muted)" tickFormatter={(val) => `₹${Number(val).toLocaleString('en-IN')}`} />
                 <Tooltip 
+                  formatter={(value: any) => [`₹${Number(value).toLocaleString('en-IN')}`, 'Revenue']}
                   contentStyle={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)' }} 
                   itemStyle={{ color: 'var(--text-primary)' }} 
                 />
