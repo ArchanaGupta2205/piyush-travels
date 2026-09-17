@@ -15,7 +15,6 @@ export default function VehicleListing() {
   
   // States for features
   const [wishlist, setWishlist] = useState<Set<string>>(new Set());
-  const [compareList, setCompareList] = useState<Set<string>>(new Set());
   const [quickViewVehicle, setQuickViewVehicle] = useState<Vehicle | null>(null);
 
   // Sorting and Pagination
@@ -45,21 +44,6 @@ export default function VehicleListing() {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
-      return next;
-    });
-  };
-
-  const handleToggleCompare = (id: string) => {
-    setCompareList((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else {
-        if (next.size >= 3) {
-          alert("You can only compare up to 3 vehicles at a time.");
-          return prev;
-        }
-        next.add(id);
-      }
       return next;
     });
   };
@@ -141,8 +125,6 @@ export default function VehicleListing() {
                   key={vehicle._id}
                   vehicle={vehicle}
                   onQuickView={setQuickViewVehicle}
-                  onCompare={handleToggleCompare}
-                  isCompared={compareList.has(vehicle._id)}
                   onToggleWishlist={handleToggleWishlist}
                   isWishlisted={wishlist.has(vehicle._id)}
                 />

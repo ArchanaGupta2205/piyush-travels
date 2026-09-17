@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Heart, Scale, MapPin, Users, Fuel, Cog } from "lucide-react";
+import { Heart, MapPin, Users, Fuel, Cog } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Vehicle } from "@/types/vehicle";
@@ -11,8 +11,6 @@ import ImageSlider from "./ImageSlider";
 interface VehicleCardProps {
   vehicle: Vehicle;
   onQuickView: (vehicle: Vehicle) => void;
-  onCompare: (vehicleId: string) => void;
-  isCompared: boolean;
   onToggleWishlist: (vehicleId: string) => void;
   isWishlisted: boolean;
 }
@@ -20,8 +18,6 @@ interface VehicleCardProps {
 export default function VehicleCard({
   vehicle,
   onQuickView,
-  onCompare,
-  isCompared,
   onToggleWishlist,
   isWishlisted,
 }: VehicleCardProps) {
@@ -52,7 +48,7 @@ export default function VehicleCard({
           </span>
         </div>
 
-        {/* Action Buttons (Wishlist/Compare) */}
+        {/* Action Button (Wishlist) */}
         <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
           <button
             onClick={() => onToggleWishlist(vehicle._id)}
@@ -60,17 +56,6 @@ export default function VehicleCard({
             className="p-2 rounded-full bg-white/80 dark:bg-black/50 backdrop-blur-md text-zinc-700 dark:text-white hover:bg-white dark:hover:bg-black/80 transition-colors shadow-sm"
           >
             <Heart size={18} className={isWishlisted ? "fill-pink-500 text-pink-500" : ""} />
-          </button>
-          <button
-            onClick={() => onCompare(vehicle._id)}
-            aria-label="Compare"
-            className={`p-2 rounded-full backdrop-blur-md transition-colors shadow-sm ${
-              isCompared 
-                ? "bg-purple-600 text-white" 
-                : "bg-white/80 dark:bg-black/50 text-zinc-700 dark:text-white hover:bg-white dark:hover:bg-black/80"
-            }`}
-          >
-            <Scale size={18} />
           </button>
         </div>
 
