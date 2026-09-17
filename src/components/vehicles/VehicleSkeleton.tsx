@@ -25,12 +25,8 @@ export default function VehicleSkeleton() {
         </div>
         
         {/* Actions Skeleton */}
-        <div className="flex items-center justify-between pt-4 border-t border-zinc-100 dark:border-zinc-800">
-          <div className="flex gap-2">
-            <div className="h-10 w-10 bg-zinc-200 dark:bg-zinc-800 rounded-full animate-pulse" />
-            <div className="h-10 w-10 bg-zinc-200 dark:bg-zinc-800 rounded-full animate-pulse" />
-          </div>
-          <div className="h-10 w-28 bg-zinc-200 dark:bg-zinc-800 rounded-full animate-pulse" />
+        <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800">
+          <div className="h-10 w-full bg-zinc-200 dark:bg-zinc-800 rounded-xl animate-pulse" />
         </div>
       </div>
     </div>

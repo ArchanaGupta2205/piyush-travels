@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Heart, MapPin, Users, Fuel, Cog } from "lucide-react";
+import { MapPin, Users, Fuel, Cog } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Vehicle } from "@/types/vehicle";
@@ -11,15 +11,11 @@ import ImageSlider from "./ImageSlider";
 interface VehicleCardProps {
   vehicle: Vehicle;
   onQuickView: (vehicle: Vehicle) => void;
-  onToggleWishlist: (vehicleId: string) => void;
-  isWishlisted: boolean;
 }
 
 export default function VehicleCard({
   vehicle,
   onQuickView,
-  onToggleWishlist,
-  isWishlisted,
 }: VehicleCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -46,17 +42,6 @@ export default function VehicleCard({
           <span className="px-3 py-1 bg-black/60 backdrop-blur-md text-white text-xs font-medium rounded-full shadow-sm">
             {vehicle.type}
           </span>
-        </div>
-
-        {/* Action Button (Wishlist) */}
-        <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
-          <button
-            onClick={() => onToggleWishlist(vehicle._id)}
-            aria-label="Wishlist"
-            className="p-2 rounded-full bg-white/80 dark:bg-black/50 backdrop-blur-md text-zinc-700 dark:text-white hover:bg-white dark:hover:bg-black/80 transition-colors shadow-sm"
-          >
-            <Heart size={18} className={isWishlisted ? "fill-pink-500 text-pink-500" : ""} />
-          </button>
         </div>
 
         {/* Quick View Overlay */}

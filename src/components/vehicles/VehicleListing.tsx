@@ -14,7 +14,6 @@ export default function VehicleListing() {
   const [error, setError] = useState<string | null>(null);
   
   // States for features
-  const [wishlist, setWishlist] = useState<Set<string>>(new Set());
   const [quickViewVehicle, setQuickViewVehicle] = useState<Vehicle | null>(null);
 
   // Sorting and Pagination
@@ -38,15 +37,6 @@ export default function VehicleListing() {
 
     loadVehicles();
   }, []);
-
-  const handleToggleWishlist = (id: string) => {
-    setWishlist((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
 
   // Derived state: Sorted Vehicles
   const sortedVehicles = useMemo(() => {
@@ -125,8 +115,6 @@ export default function VehicleListing() {
                   key={vehicle._id}
                   vehicle={vehicle}
                   onQuickView={setQuickViewVehicle}
-                  onToggleWishlist={handleToggleWishlist}
-                  isWishlisted={wishlist.has(vehicle._id)}
                 />
               ))}
             </div>

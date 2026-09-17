@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Luxury Fleet & Rates | Sedans, SUVs, Tempo Travellers & Buses",
   description:
-    "Browse Piyush Travels' luxury rental fleet. Compare rates for Mercedes-Benz, BMW, Audi, Innova Hycross, 12-26 Seater Luxury Tempo Travellers, and 45-Seater Volvo Coaches. Instant online booking.",
+    "Browse Piyush Travels' luxury rental fleet with transparent rates for Mercedes-Benz, BMW, Audi, Innova Hycross, 12-26 Seater Luxury Tempo Travellers, and 45-Seater Volvo Coaches. Instant online booking.",
   keywords: [
     "luxury cars for rent delhi",
     "tempo traveller booking online",
