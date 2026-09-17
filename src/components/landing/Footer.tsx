@@ -46,9 +46,6 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-bold mb-6">Services & Fleet</h4>
             <ul className="space-y-4 text-gray-400">
-              <li><Link href="/vehicles" className="hover:text-white transition-colors">Luxury Sedans & SUVs</Link></li>
-              <li><Link href="/vehicles" className="hover:text-white transition-colors">Tempo Travellers</Link></li>
-              <li><Link href="/vehicles" className="hover:text-white transition-colors">Volvo Coaches</Link></li>
               <li><Link href="/about#faqs" className="hover:text-white transition-colors">FAQs & Policies</Link></li>
             </ul>
           </div>
